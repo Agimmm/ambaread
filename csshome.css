@@ -1,0 +1,497 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #DEFBFF;
+}
+
+.container {
+    display: flex;
+    gap: 30px;
+    background-color: white;
+    padding: 30px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin: 20px 40px;
+}
+
+.book-cover {
+    width: 300px;
+    height: 450px;
+    object-fit: cover;
+}
+
+.book-details {
+    flex: 1;
+}
+
+.book-title {
+    color: #333;
+    font-size: 28px;
+    margin-bottom: 10px;
+}
+
+.book-rating {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.stars {
+    color: #ffcc00;
+    margin-right: 10px;
+}
+
+.author-section {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.author-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-right: 15px;
+    object-fit: cover;
+}
+
+.rating-section {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.rating-stats {
+    flex: 1;
+}
+
+.rating-bars {
+    flex: 1;
+}
+
+.rating-bar {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.rating-bar-bg {
+    flex: 1;
+    height: 10px;
+    background-color: #e0e0e0;
+    margin: 0 10px;
+}
+
+.rating-bar-fill {
+    height: 100%;
+    background-color: #4CAF50;
+}
+
+.review-card {
+    border: 1px solid #e0e0e0;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+.review-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.review-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.similar-books {
+    display: flex;
+    gap: 15px;
+    margin: 20px 40px;
+    overflow-x: auto;
+}
+
+.similar-book {
+    flex: 0 0 150px;
+}
+
+.similar-book img {
+    width: 150px;
+    height: 225px;
+    object-fit: cover;
+}
+
+/* Header styles */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+}
+
+.profile-pic {
+    width: 50px;
+    height: 50px;
+    left: 1343px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+    transition: opacity 0.3s;
+    border: 2px solid #ddd;
+}
+
+.profile-pic:hover {
+    opacity: 0.8;
+    border-color: #007bff;
+}
+
+.profile-container {
+    display: flex;
+    align-items: center;
+    margin-left: 95px;
+}
+
+.logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+    margin-right: 15px;
+}
+
+.brand-name {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Centered navigation */
+.nav-container {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 30px;
+}
+
+nav a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+}
+
+nav a.active {
+    border-bottom: 3px solid #ff9800;
+    padding-bottom: 5px;
+}
+
+/* Dropdown styles */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-btn {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    border-radius: 8px;
+    z-index: 1;
+    padding: 10px 0;
+    margin-top: 10px;
+}
+
+.dropdown-content a {
+    color: #333;
+    padding: 10px 16px;
+    text-decoration: none;
+    display: block;
+    font-weight: normal;
+    transition: background-color 0.2s;
+}
+
+.dropdown-content a:hover {
+    background-color: #e1e1e1;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown-column {
+    float: left;
+    width: 50%;
+}
+
+.dropdown-column h4 {
+    padding: 10px 16px;
+    color: #666;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+/* Search bar */
+.search-container {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    width: 80%;
+    max-width: 600px;
+    background: white;
+    border-radius: 25px;
+    padding: 10px 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.search-bar input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 5px;
+    font-size: 16px;
+}
+
+.search-icon, .filter-icon {
+    color: #666;
+    margin: 0 10px;
+}
+
+/* Book sections */
+section {
+    padding: 20px 40px;
+}
+
+h2 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.book-grid {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 20px;
+}
+
+.book-card {
+    background: #f1f1f1;
+    border-radius: 10px;
+    padding: 15px;
+    min-width: 150px;
+    text-align: center;
+}
+
+.author-image {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    object-fit: cover;
+}
+
+.book-title {
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.author-name {
+    color: #666;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.book-desc {
+    color: #999;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.book-grid:hover .book-card {
+    transform: scale(0.95);
+    transition: all 0.3s ease;
+}
+
+.book-grid .book-card:hover {
+    transform: scale(1.15);
+    z-index: 2;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+/* Suggestions section */
+.suggestion-grid {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding-bottom: 20px;
+    align-items: center; 
+}
+
+.suggestion-card {
+    min-width: 120px;
+    width: 120px;
+    height: 180px;
+    border-radius: 10px;
+    overflow: hidden;
+    transition: all 0.3s ease; 
+    transform-origin: center;
+    position: relative;
+    z-index: 1;
+}
+
+.suggestion-grid:hover .suggestion-card {
+    transform: scale(0.95);
+}
+
+.suggestion-grid .suggestion-card:hover {
+    transform: scale(1.15);
+    z-index: 10; 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3); 
+}
+
+.suggestion-card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Footer */
+footer {
+    background-color: #A4C0ED;
+    padding: 40px;
+    margin-top: 40px;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.company-work-container {
+    display: flex;
+    flex-direction: row;
+    gap: 40px; 
+}
+
+.footer-section {
+    margin-right: 40px;
+    min-width: 120px; 
+}
+
+.footer-section h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.footer-section ul {
+    list-style: none;
+}
+
+.footer-section li {
+    margin-bottom: 10px;
+}
+
+.footer-section a {
+    color: #2c3e50;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.social-icons {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.social-icon {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+}
+
+.footer-brand {
+    text-align: center;
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+
+.footer-brand-name {
+    position: static;
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.app-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+    
+.app-button {
+    padding: 0 !important;
+    margin: 0;
+    border: none;
+    display: inline-block;
+    background: none;
+}
+
+.app-button img {
+    width: 100px;
+    height: auto;
+    display: block;
+}
+
+.copyright {
+    text-align: center;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #9ab3d5;
+    color: #A4C0ED;
+    font-size: 14px;
+}
