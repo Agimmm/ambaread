@@ -107,7 +107,7 @@ $similar_books_result = $similar_books_query->get_result();
             
             <h3>Tentang Penulis</h3>
             <div class="author-section">
-                <img src="/api/placeholder/80/80" alt="Penulis" class="author-avatar">
+                <img src="assets/diddy.png" alt="Penulis" class="author-avatar">
                 <div>
                     <h4><?php echo htmlspecialchars($book['author']); ?></h4>
                     <p>Penulis <?php echo htmlspecialchars($book['genre']); ?> berbakat</p>
@@ -123,6 +123,9 @@ $similar_books_result = $similar_books_query->get_result();
             
             <h3>Deskripsi</h3>
             <p><?php echo htmlspecialchars($book['description']); ?></p>
+
+            <!-- Tombol Baca Sekarang -->
+            <a href="baca_buku.php?id=<?php echo $book['id']; ?>" class="read-now-button">Baca Sekarang</a>
         </div>
     </div>
     

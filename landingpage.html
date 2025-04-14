@@ -4,12 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AmbaRead - Gerbang Ilmu untuk Semua</title>
+    <!-- Import Poppins font from Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif; /* Changed all font to Poppins */
         }
         
         body {
@@ -59,7 +63,7 @@
         
         .logo h1 {
             font-size: 24px;
-            font-weight: bold;
+            font-weight: 700;
             color: #333;
         }
         
@@ -126,12 +130,14 @@
             font-size: 2.5rem;
             margin-bottom: 20px;
             color: #222;
+            font-weight: 700;
         }
         
         h3 {
             font-size: 1.5rem;
             margin-bottom: 10px;
             color: #333;
+            font-weight: 600;
         }
         
         p {
@@ -139,6 +145,11 @@
             line-height: 1.6;
             margin-bottom: 20px;
             color: #444;
+            font-weight: 400;
+        }
+        
+        .bold-text {
+            font-weight: 700; /* Made bold as requested */
         }
         
         .divider {
@@ -223,7 +234,7 @@
                 <h2>Selamat Datang di AmbaRead!</h2>
                 
                 <h3>Gerbang Ilmu untuk Semua, Kapan Saja dan di Mana Saja!</h3>
-                <p>Literasi adalah jendela dunia.<br>
+                <p><span class="bold-text">Literasi adalah jendela dunia.</span><br>
                 Kami hadir untuk membukakan jendela itu lebih lebar.</p>
                 
                 <div class="divider"></div>
