@@ -4,43 +4,45 @@ include 'koneksi.php';
 
 // Cek apakah pengguna sudah login
 if (!isset($_SESSION['username'])) {
-    // Jika belum login, redirect ke halaman login
     header('Location: login.php');
     exit();
 }
 
-// Ambil data user dari database
-$username = $_SESSION['username'];
-$query = $conn->prepare("SELECT * FROM users WHERE username = ?");
-$query->bind_param("s", $username);
-$query->execute();
-$result = $query->get_result();
-$user = $result->fetch_assoc();
+// Ambil user_id dari session
+$username = $_SESSION['username'];  
 
-// Tentukan lokasi gambar profil
-$profileImage = !empty($user['foto_profil']) ? "uploads/".$user['foto_profil'] : "/api/placeholder/50/50";
-
-// Ambil detail buku
-if (!isset($_GET['id'])) {
-    die("Buku tidak ditemukan");
+// Ambil data buku dari database
+$book_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+if (!$book_id) {
+    die("Buku tidak ditemukan.");
 }
 
-$book_id = intval($_GET['id']);
-$book_query = $conn->prepare("SELECT * FROM books WHERE id = ?");
-$book_query->bind_param("i", $book_id);
-$book_query->execute();
-$book_result = $book_query->get_result();
-$book = $book_result->fetch_assoc();
+$query = $conn->prepare("SELECT * FROM books WHERE id = ?");
+$query->bind_param("i", $book_id);
+$query->execute();
+$book = $query->get_result()->fetch_assoc();
 
 if (!$book) {
-    die("Buku tidak ditemukan");
+    die("Buku tidak ditemukan.");
 }
 
-// Ambil buku serupa (dalam genre yang sama)
-$similar_books_query = $conn->prepare("SELECT * FROM books WHERE genre = ? AND id != ? LIMIT 4");
-$similar_books_query->bind_param("si", $book['genre'], $book_id);
-$similar_books_query->execute();
-$similar_books_result = $similar_books_query->get_result();
+// Ambil data user
+$user_query = $conn->prepare("SELECT * FROM users WHERE username = ?");
+$user_query->bind_param("s", $username);
+$user_query->execute();
+$user = $user_query->get_result()->fetch_assoc();
+
+// Tentukan gambar profil
+$profileImage = !empty($user['foto_profil']) ? "uploads/".$user['foto_profil'] : "/api/placeholder/50/50";
+
+// Periksa apakah buku sudah ada di favorit pengguna
+$check_favorite = $conn->prepare("SELECT * FROM favorites WHERE user_id = (SELECT id FROM users WHERE username = ?) AND book_id = ?");
+$check_favorite->bind_param("si", $username, $book_id);
+$check_favorite->execute();
+$favorite_result = $check_favorite->get_result();
+
+// Tentukan apakah buku ada di favorit
+$is_favorite = $favorite_result->num_rows > 0;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -51,41 +53,7 @@ $similar_books_result = $similar_books_query->get_result();
     <link rel="stylesheet" href="csshome.css">
 </head>
 <body>
-    <header>
-        <div class="logo-container">
-            <img src="assets/ambaa.jpg" alt="Logo" class="logo">
-            <div class="brand-name">AmbaRead</div>
-        </div>
-        
-        <nav class="nav-container">
-            <ul>
-                <li><a href="#" class="active">Beranda</a></li>
-                <li><a href="#">Kategori</a></li>
-                <li><a href="#">Koleksi</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-btn">Lainnya ▼</a>
-                    <div class="dropdown-content">
-                        <a href="#">Tentang Kami</a>
-                        <a href="#">Hubungi Kami</a>
-                    </div>
-                </li>
-            </ul>
-        </nav>
-        
-        <div class="profile-container">
-            <a href="profil.php" title="Laman Profil">
-                <img src="<?php echo $profileImage; ?>" alt="Profile Picture" class="profile-pic">
-            </a>
-        </div>
-    </header>
-
-    <div class="search-container">
-        <div class="search-bar">
-            <span class="search-icon">🔍</span>
-            <input type="text" placeholder="Cari buku, penulis...">
-            <span class="filter-icon">🔬</span>
-        </div>
-    </div>
+    <?php include 'header.php'; ?>
 
     <div class="container">
         <img src="<?php echo $book['cover_image']; ?>" alt="<?php echo htmlspecialchars($book['title']); ?>" class="book-cover">
@@ -107,10 +75,10 @@ $similar_books_result = $similar_books_query->get_result();
             
             <h3>Tentang Penulis</h3>
             <div class="author-section">
-                <img src="assets/diddy.png" alt="Penulis" class="author-avatar">
+                <img src="<?php echo $book['author_picture']; ?>" alt="Penulis" class="author-avatar">
                 <div>
                     <h4><?php echo htmlspecialchars($book['author']); ?></h4>
-                    <p>Penulis <?php echo htmlspecialchars($book['genre']); ?> berbakat</p>
+                    <p>Penulis <?php echo htmlspecialchars($book['genre']); ?> </p>
                 </div>
             </div>
             
@@ -124,26 +92,48 @@ $similar_books_result = $similar_books_query->get_result();
             <h3>Deskripsi</h3>
             <p><?php echo htmlspecialchars($book['description']); ?></p>
 
+            <!-- Form Add to Favorite atau Remove from Favorite -->
+            <button class="favorite-button" id="favorite-button" data-book-id="<?php echo $book['id']; ?>">
+                <?php echo $is_favorite ? 'Remove from Favorite' : 'Add to Favorite'; ?>
+            </button>
+
             <!-- Tombol Baca Sekarang -->
             <a href="baca_buku.php?id=<?php echo $book['id']; ?>" class="read-now-button">Baca Sekarang</a>
         </div>
     </div>
-    
-    <h2 style="text-align: center;">Pembaca Juga Menikmati</h2>
-    <div class="similar-books">
-        <?php while($similar_book = $similar_books_result->fetch_assoc()): ?>
-        <div class="similar-book">
-            <a href="buku.php?id=<?php echo $similar_book['id']; ?>">
-                <img src="<?php echo $similar_book['cover_image']; ?>" alt="<?php echo htmlspecialchars($similar_book['title']); ?>">
-                <h4><?php echo htmlspecialchars($similar_book['title']); ?></h4>
-                <p><?php echo htmlspecialchars($similar_book['author']); ?></p>
-            </a>
-        </div>
-        <?php endwhile; ?>
-    </div>
 
-    <footer>
-        <!-- Footer content remains the same as previous version -->
-    </footer>
+    <?php include 'footer.php'; ?>
+
+    <script>
+        // Menangani klik pada tombol Add/Remove to Favorite
+        document.getElementById('favorite-button').addEventListener('click', function() {
+            var bookId = this.getAttribute('data-book-id');  // Ambil ID buku dari data-attribute
+            var action = this.textContent === 'Add to Favorite' ? 'add' : 'remove';  // Cek apakah tombol untuk Add atau Remove
+
+            // Buat request AJAX
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "favorite_action.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            
+            // Ketika permintaan selesai
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    // Ubah teks tombol berdasarkan status favorit
+                    if (action === 'add') {
+                        document.getElementById('favorite-button').textContent = 'Remove from Favorite';
+                    } else {
+                        document.getElementById('favorite-button').textContent = 'Add to Favorite';
+                    }
+                    // Tampilkan pesan sukses
+                    alert(xhr.responseText);
+                } else {
+                    alert("Terjadi kesalahan. Coba lagi nanti.");
+                }
+            };
+            
+            // Kirim data book_id dan action ke favorite_action.php
+            xhr.send("book_id=" + bookId + "&action=" + action);
+        });
+    </script>
 </body>
 </html>

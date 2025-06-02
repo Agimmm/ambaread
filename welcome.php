@@ -23,6 +23,14 @@ $profileImage = !empty($user['foto_profil']) ? "uploads/".$user['foto_profil'] :
 // Fetch trending books
 $trending_query = "SELECT * FROM books ORDER BY rating DESC LIMIT 7";
 $trending_result = $conn->query($trending_query);
+
+// Fetch all books for search functionality
+$all_books_query = "SELECT * FROM books";
+$all_books_result = $conn->query($all_books_query);
+$all_books = [];
+while($book = $all_books_result->fetch_assoc()) {
+    $all_books[] = $book;
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,176 +39,265 @@ $trending_result = $conn->query($trending_query);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AmbaRead</title>
     <link rel="stylesheet" href="csshome.css">
+ 
 </head>
 <body>
-    <header>
-        <div class="logo-container">
-            <img src="assets/ambaa.jpg" alt="Logo" class="logo">
-            <div class="brand-name">AmbaRead</div>
-        </div>
-        
-        <div class="nav-container">
-            <nav>
-                <ul>
-                    <li><a href="#" class="active">Home</a></li>
-                    <li><a href="#">My Books</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-btn">Genre ▼</a>
-                        <div class="dropdown-content">
-                            <div class="dropdown-column">
-                                <h4>Fiction</h4>
-                                <a href="#">Fantasy</a>
-                                <a href="#">Science Fiction</a>
-                                <a href="#">Mystery</a>
-                                <a href="#">Thriller</a>
-                                <a href="#">Romance</a>
-                                <a href="#">Horror</a>
-                                <a href="#">Historical Fiction</a>
-                                <a href="#">Literary Fiction</a>
-                            </div>
-                            <div class="dropdown-column">
-                                <h4>Non-Fiction</h4>
-                                <a href="#">Biography</a>
-                                <a href="#">Memoir</a>
-                                <a href="#">Self-Help</a>
-                                <a href="#">Business</a>
-                                <a href="#">History</a>
-                                <a href="#">Science</a>
-                                <a href="#">Philosophy</a>
-                                <a href="#">Travel</a>
-                            </div>
-                        </div>
-                    </li>
-                    <li><a href="#">Contact US</a></li>
-                    <?php 
-if ($_SESSION['username'] === 'admin') { ?>
-    <li><a href="before_admin_books.php">Edit Buku</a></li>
-<?php } ?>
-                </ul>
-            </nav>
-        </div>
-        
-        <div class="profile-container">
-            <a href="profil.php" title="Laman Profil">
-                <img src="<?php echo $profileImage; ?>" alt="Profile Picture" class="profile-pic">
-            </a>
-        </div>
-    </header>
+<?php include 'header.php'; ?>
+
+    <!-- Tambahkan banner selamat datang di sini -->
+    <div class="welcome-banner">Selamat datang kembali, <?php echo htmlspecialchars($user['username']); ?>!</div>
     
     <div class="search-container">
         <div class="search-bar">
             <span class="search-icon">🔍</span>     
-            <input type="text" placeholder="Search Your Books">
+            <input type="text" id="searchInput" placeholder="Search Your Books">
             <span class="filter-icon">⚙️</span>
         </div>
     </div>
     
-    <section>
-        <h2>Trending Books</h2>
-        <div class="book-grid">
-            <?php while($book = $trending_result->fetch_assoc()): ?>
-            <div class="book-card">
-                <a href="buku.php?id=<?php echo $book['id']; ?>">
-                    <img src="<?php echo $book['cover_image']; ?>" alt="<?php echo htmlspecialchars($book['title']); ?>" class="author-image">
-                    <div class="book-title"><?php echo htmlspecialchars($book['title']); ?></div>
-                    <div class="author-name"><?php echo htmlspecialchars($book['author']); ?></div>
-                    <div class="book-desc"><?php echo htmlspecialchars(substr($book['description'], 0, 50)); ?>...</div>
-                    <div class="stars">
-                        <?php 
-                        $rating = round($book['rating']);
-                        for($i = 1; $i <= 5; $i++) {
-                            echo $i <= $rating ? '★' : '☆';
-                        }
-                        ?>
-                    </div>
-                </a>
-            </div>
-            <?php endwhile; ?>
-        </div>
-    </section>
-    
-    <section>
-        <h2>Suggestions</h2>
-        <div class="suggestion-grid">
-            <?php 
-            // Reset the pointer
-            $trending_result->data_seek(0);
-            while($book = $trending_result->fetch_assoc()): 
-            ?>
-            <div class="suggestion-card">
-                <a href="buku.php?id=<?php echo $book['id']; ?>">
-                    <img src="<?php echo $book['cover_image']; ?>" alt="<?php echo htmlspecialchars($book['title']); ?>">
-                </a>
-            </div>
-            <?php endwhile; ?>
-        </div>
-    </section>
-    
-    <footer>
-        <div class="footer-content">
-            <div class="company-work-container">
-                <div>
-                    <div class="footer-section">
-                        <h3>COMPANY</h3>
-                        <ul>
-                            <li><a href="#">About us</a></li>
-                            <li><a href="#">Careers</a></li>
-                            <li><a href="#">Terms</a></li>
-                            <li><a href="#">Privacy</a></li>
-                            <li><a href="#">Interest Based Ads</a></li>
-                            <li><a href="#">Ads Preferences</a></li>
-                            <li><a href="#">Help</a></li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="footer-section">
-                    <h3>WORK WITH US</h3>
-                    <ul>
-                        <li><a href="#">Authors</a></li>
-                        <li><a href="#">Advertise</a></li>
-                        <li><a href="#">Author & Ads blog</a></li>
-                        <li><a href="#">API</a></li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div>
-                <div class="footer-section">
-                    <h3>CONTACT</h3>
-                    <div class="social-icons">
-                        <img src="assets/facebook.png" alt="Facebook" class="social-icon">
-                        <img src="assets/x.png" alt="X (Twitter)" class="social-icon">
-                        <img src="assets/apple.png" alt="Apple" class="social-icon">
-                        <img src="assets/linkedin.png" alt="LinkedIn" class="social-icon">
-                    </div>
-                </div>
-                
-                <div class="footer-section">
-                    <h3>SUPPORT</h3>
-                    <ul>
-                        <li><a href="#">FAQ</a></li>
-                        <li><a href="#">Search Guide</a></li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="footer-brand">
-                <div class="footer-brand-name">AmbaRead</div>
-                <div class="app-buttons">
-                    <a href="#" class="app-button">
-                       <img src="assets/getplaystore.png">
-                    </a>
-                    <a href="#" class="app-button">
-                      <img src="assets/getappstore.png">
+    <!-- Regular content - shown by default -->
+    <div class="regular-content">
+        <section>
+            <h2>Trending Books</h2>
+            <div class="suggestion-grid">
+                <?php while($book = $trending_result->fetch_assoc()): ?>
+                <div class="suggestion-card">
+                    <a href="buku.php?id=<?php echo $book['id']; ?>">
+                        <img src="<?php echo $book['cover_image']; ?>" alt="<?php echo htmlspecialchars($book['title']); ?>">
                     </a>
                 </div>
+                <?php endwhile; ?>
             </div>
-        </div>
+        </section>
         
-        <div class="copyright">
-            Copyright © YYYY - YYYY Company name. All rights reserved
-        </div>
-    </footer>
+        <section>
+            <h2>Suggestions</h2>
+            <div class="suggestion-grid">
+                <?php 
+                // Reset the pointer
+                $trending_result->data_seek(0);
+                while($book = $trending_result->fetch_assoc()): 
+                ?>
+                <div class="suggestion-card">
+                    <a href="buku.php?id=<?php echo $book['id']; ?>">
+                        <img src="<?php echo $book['cover_image']; ?>" alt="<?php echo htmlspecialchars($book['title']); ?>">
+                    </a>
+                </div>
+                <?php endwhile; ?>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Search results - hidden by default -->
+    <div class="search-results">
+        <section>
+            <h2>Books keyword: "<span id="searchKeyword"></span>"</h2>
+            <div id="searchResultsGrid" class="suggestion-grid">
+                <!-- Search results will be populated here via JavaScript -->
+            </div>
+            <div id="noResults" class="no-results" style="display: none;">
+                Tidak ada buku yang sesuai dengan pencarian Anda.
+            </div>
+        </section>
+    </div>
+    
+    <?php include 'footer.php'; ?>
+
+    <script>
+    // Store all books from PHP to JavaScript
+    const allBooks = <?php echo json_encode($all_books); ?>;
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        // ===== SEARCH FUNCTIONALITY =====
+        const searchInput = document.getElementById('searchInput');
+        const searchResults = document.querySelector('.search-results');
+        const regularContent = document.querySelector('.regular-content');
+        const searchKeyword = document.getElementById('searchKeyword');
+        const searchResultsGrid = document.getElementById('searchResultsGrid');
+        const noResults = document.getElementById('noResults');
+        
+        // Function to perform search
+        function performSearch() {
+            const searchQuery = searchInput.value.trim().toLowerCase();
+            
+            // Update keyword display
+            searchKeyword.textContent = searchQuery;
+            
+            // If search is empty, show regular content
+            if (searchQuery === '') {
+                document.body.classList.remove('searching');
+                return;
+            }
+            
+            // Switch to search mode
+            document.body.classList.add('searching');
+            
+            // Filter books based on search query
+            const filteredBooks = allBooks.filter(book => 
+                book.title.toLowerCase().includes(searchQuery) || 
+                (book.author && book.author.toLowerCase().includes(searchQuery))
+            );
+            
+            // Clear previous results
+            searchResultsGrid.innerHTML = '';
+            
+            // Show no results message if needed
+            if (filteredBooks.length === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+                
+                // Populate search results
+                filteredBooks.forEach(book => {
+                    const card = document.createElement('div');
+                    card.className = 'suggestion-card';
+                    
+                    card.innerHTML = `
+                        <a href="buku.php?id=${book.id}">
+                            <img src="${book.cover_image}" alt="${book.title}">
+                        </a>
+                    `;
+                    
+                    searchResultsGrid.appendChild(card);
+                });
+            }
+        }
+        
+        // Event listeners for search
+        searchInput.addEventListener('input', performSearch);
+        
+        // Clear search when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                if (searchInput.value.trim() === '') {
+                    document.body.classList.remove('searching');
+                }
+            }
+        });
+    
+        // ===== ANIMASI LOADING =====
+        // Tambahkan overlay loading dan hapus setelah halaman dimuat
+        const body = document.body;
+        const loadingOverlay = document.createElement('div');
+        loadingOverlay.className = 'loading-overlay';
+        loadingOverlay.innerHTML = '<div class="loader"></div>';
+        body.appendChild(loadingOverlay);
+
+        setTimeout(() => {
+            loadingOverlay.style.opacity = '0';
+            setTimeout(() => {
+                loadingOverlay.remove();
+            }, 500);
+        }, 800);
+
+        // ===== WELCOME BANNER =====
+        const welcomeBanner = document.querySelector('.welcome-banner');
+        
+        // Tampilkan welcome banner
+        setTimeout(() => {
+            welcomeBanner.classList.add('show');
+            
+            // Sembunyikan setelah beberapa detik
+            setTimeout(() => {
+                welcomeBanner.classList.remove('show');
+            }, 3000);
+        }, 1000);
+
+        // ===== EFEK SEARCH BAR =====
+        const searchBar = document.querySelector('.search-bar input');
+        const searchIcon = document.querySelector('.search-icon');
+        const filterIcon = document.querySelector('.filter-icon');
+
+        // Efek focus pada search bar
+        searchBar.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+        });
+
+        searchBar.addEventListener('blur', function() {
+            this.parentElement.classList.remove('focused');
+        });
+
+        // Animasi icon pencarian
+        searchIcon.addEventListener('click', function() {
+            searchBar.focus();
+        });
+
+        // Efek hover pada filter icon
+        filterIcon.addEventListener('mouseover', function() {
+            this.style.transform = 'rotate(90deg)';
+        });
+
+        filterIcon.addEventListener('mouseout', function() {
+            this.style.transform = 'rotate(0deg)';
+        });
+
+        // ===== SCROLL ANIMATIONS =====
+        // Tambahkan animasi saat section muncul ketika di-scroll
+        const sections = document.querySelectorAll('section');
+        
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const sectionObserver = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('section-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            section.classList.add('section-hidden');
+            sectionObserver.observe(section);
+        });
+
+        // ===== SLIDER BUKU =====
+        // Implementasi slider sederhana untuk bagian trending books
+        const sliders = document.querySelectorAll('.suggestion-grid');
+        
+        sliders.forEach(slider => {
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+            let moved = false;
+
+            slider.addEventListener('mousedown', (e) => {
+                isDown = true;
+                slider.classList.add('active');
+                startX = e.pageX - slider.offsetLeft;
+                scrollLeft = slider.scrollLeft;
+                moved = false;
+            });
+
+            slider.addEventListener('mouseleave', () => {
+                isDown = false;
+                slider.classList.remove('active');
+            });
+
+            slider.addEventListener('mouseup', (e) => {
+                isDown = false;
+                slider.classList.remove('active');
+                
+                // Jangan mencegah navigasi jika tidak bergerak
+                if (moved) {
+                    e.preventDefault();
+                }
+            });
+
+            slider.addEventListener('mousemove', (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                moved = true;
+                const x = e.pageX - slider.offsetLeft;
+                const walk = (x - startX) * 2; // Kecepatan scroll
+                slider.scrollLeft = scrollLeft - walk;
+            });
+        });
+    });zz
+    </script>
 </body>
 </html>

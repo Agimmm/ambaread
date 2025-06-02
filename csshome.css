@@ -7,6 +7,12 @@
 
 body {
     background-color: #DEFBFF;
+    height: 100%;  /* Pastikan body dan html mengisi penuh */
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    
 }
 
 .container {
@@ -16,6 +22,7 @@ body {
     padding: 30px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     margin: 20px 40px;
+    flex-grow: 1;
 }
 
 .book-cover {
@@ -177,6 +184,14 @@ header {
 .brand-name {
     font-size: 24px;
     font-weight: bold;
+    text-decoration: none;
+    color: inherit; /* Biar warnanya ikut style sebelumnya */
+}
+.brand-name:visited,
+.brand-name:active,
+.brand-name:hover {
+    text-decoration: none;
+    color: inherit;
 }
 
 /* Centered navigation */
@@ -507,5 +522,191 @@ footer {
 }
 
 .read-now-button:hover {
-    background-color: #4cae4c; /* Warna hijau lebih gelap saat hover */
+    background-color: #02570e; /* Warna hijau lebih gelap saat hover */
+     transform: scale(1.1);
 }
+
+/* CSS untuk efek JavaScript */
+/* ===== LOADING OVERLAY ===== */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease;
+}
+
+.loader {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* ===== WELCOME MESSAGE ===== */
+.welcome-banner {
+    position: fixed;
+    top: -70px; /* Mulai di luar viewport */
+    left: 0;
+    width: 100%;
+    background-color: #3498db;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 1000;
+    transition: top 0.5s ease;
+}
+
+.welcome-banner.show {
+    top: 0;
+}
+
+/* ===== SEARCH BAR EFFECTS ===== */
+.search-bar {
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.search-bar.focused {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+.search-icon, .filter-icon {
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-icon {
+    transition: transform 0.3s ease;
+}
+
+/* ===== CARD EFFECTS ===== */
+.suggestion-card {
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.suggestion-card img {
+    width: 100%;
+    height: auto;
+    transition: transform 0.3s ease;
+}
+
+.suggestion-card:hover img {
+    transform: scale(1.05);
+}
+
+.suggestion-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none; /* Penting! Memungkinkan klik melewatinya */
+}
+
+.suggestion-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.suggestion-card:hover::after {
+    opacity: 1;
+}
+
+.favorite-button {
+    background-color: #5cb85c;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.favorite-button:hover {
+    background-color: #02570e;
+     transform: scale(1.1);
+}
+
+/* ===== SECTION ANIMATIONS ===== */
+.section-hidden {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease;
+}
+
+.section-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ===== SLIDER STYLE ===== */
+.suggestion-grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Firefox */
+    padding: 10px 0;
+    cursor: default; /* Mengatur default cursor */
+}
+
+.suggestion-grid::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Edge */
+}
+
+.suggestion-grid.active {
+    cursor: grabbing; /* Ganti hanya di sini jika slider sedang aktif */
+    cursor: -webkit-grabbing; /* Ganti hanya di sini untuk mendukung Safari */
+}
+
+  /* Additional styles for search results */
+        .search-results h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .search-results {
+            display: none; /* Hidden by default */
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            font-size: 18px;
+            color: #666;
+        }
+        
+        /* Style for when viewing search results */
+        .searching .regular-content {
+            display: none; /* Hide regular content when searching */
+        }
+        
+        .searching .search-results {
+            display: block; /* Show search results when searching */
+        }

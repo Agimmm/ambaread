@@ -2,10 +2,13 @@
 session_start();
 
 // Cek apakah user adalah admin
-if ($_SESSION['username'] !== 'admin') {
+if (!isset($_SESSION['username']) || $_SESSION['username'] !== 'admin') {
     header('Location: welcome.php');
     exit();
 }
+
+// Set profile image variable for header.php
+$profileImage = isset($_SESSION['profile_image']) ? $_SESSION['profile_image'] : 'assets/default-profile.png';
 ?>
 
 <!DOCTYPE html>
@@ -21,7 +24,8 @@ if ($_SESSION['username'] !== 'admin') {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            height: calc(100vh - 100px); /* Adjust height for header */
+            margin-top: 20px;
         }
 
         .admin-box {
@@ -57,6 +61,8 @@ if ($_SESSION['username'] !== 'admin') {
     </style>
 </head>
 <body>
+    <?php include 'header.php'; ?>
+    
     <div class="admin-container">
         <div class="admin-box">
             <h2>Kelola Buku</h2>

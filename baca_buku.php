@@ -61,33 +61,7 @@ if (!$book) {
     </style>
 </head>
 <body>
-    <header>
-        <div class="logo-container">
-            <img src="assets/ambaa.jpg" alt="Logo" class="logo">
-            <div class="brand-name">AmbaRead</div>
-        </div>
-        
-        <nav class="nav-container">
-            <ul>
-                <li><a href="#" class="active">Beranda</a></li>
-                <li><a href="#">Kategori</a></li>
-                <li><a href="#">Koleksi</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-btn">Lainnya ▼</a>
-                    <div class="dropdown-content">
-                        <a href="#">Tentang Kami</a>
-                        <a href="#">Hubungi Kami</a>
-                    </div>
-                </li>
-            </ul>
-        </nav>
-        
-        <div class="profile-container">
-            <a href="profil.php" title="Laman Profil">
-                <img src="<?php echo $profileImage; ?>" alt="Profile Picture" class="profile-pic">
-            </a>
-        </div>
-    </header>
+   <?php include 'header.php'; ?>
 
     <div class="search-container">
         <div class="search-bar">

@@ -56,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <div class="login-container">
     <img src="assets/logo.png" alt="Logo" class="logo">
     <div class="login-box">
-        <p>Hello Jomokers! Welcome to AmbaRead</p>
+        <p>Hello Fellas! Welcome To AmbaRead</p>
         <h2>Registrasi</h2>
 
         <?php if (!empty($message)) : ?>
